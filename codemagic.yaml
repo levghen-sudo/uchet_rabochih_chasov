@@ -1,16 +1,25 @@
 workflows:
-  ios-debug:
-    name: iOS Debug Build
+  ios-ipa-build:
+    name: iOS IPA Build (Debug)
     working_directory: .
     instance_type: mac_mini_m2
+    max_build_duration: 45
 
     environment:
       flutter: stable
       xcode: latest
+      vars:
+        FLUTTER_BUILD_MODE: debug
 
     scripts:
-      - flutter pub get
-      - flutter build ipa --debug --no-codesign --export-method development
+      - name: Get Flutter dependencies
+        script: flutter pub get
+
+      - name: Build IPA
+        script: |
+          flutter build ipa --debug --no-codesign --export-method development
 
     artifacts:
       - build/ios/iphoneos/*.ipa
+      - build/ios/iphoneos/Runner.app
+      - build/ios/iphoneos/*.dSYM
